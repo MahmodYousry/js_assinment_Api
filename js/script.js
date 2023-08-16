@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', function () {
   const weatherContainer = document.getElementById('weatherContainer');
   const middleInfo = document.querySelector('.middle-info-box');
   const thaDayAfter = document.querySelector('.thaDayAfter');
+  const weatherInfo = document.querySelectorAll('.weatherInfo');
 
   const leftBox = document.getElementById('leftBox');
 
@@ -23,43 +24,26 @@ document.addEventListener('DOMContentLoaded', function () {
       const response = await fetch(apiUrl);
       const data = await response.json();
 
-      console.log(data);
+
       
       if (data.error) {
         weatherContainer.innerHTML = `<p>${data.error.message}</p>`;
       } else {
-        const weatherInfo = `
-              <p class="m-0">${data.location.name}</p>
-              <h1 class="m-0">
-                <span class="degree">${data.current.temp_c}°C</span>
-                <span><img src="${data.current.condition.icon}" alt=""></span>
-                <p class="m-0 fs-5">${data.current.condition.text}</p>
-              </h1>
-        `;
-        
-        leftBox.innerHTML = weatherInfo;
- 
-        const secondDayof = `
-              <p class="m-0">${data.location.name}</p>
-              <h1 class="m-0">
-                <span class="degree">${data.forecast.forecastday[1].day.avgtemp_c}°C</span>
-                <span><img src="${data.forecast.forecastday[1].day.condition.icon}" alt=""></span>
-                <p class="m-0 fs-5">${data.forecast.forecastday[1].day.condition.text}</p>
-              </h1>
-        `;
 
-        middleInfo.innerHTML = secondDayof;
 
-        const thirdDay = `
-              <p class="m-0">${data.location.name}</p>
-              <h1 class="m-0">
-                <span class="degree">${data.forecast.forecastday[2].day.avgtemp_c}°C</span>
-                <span><img src="${data.forecast.forecastday[2].day.condition.icon}" alt=""></span>
-                <p class="m-0 fs-5">${data.forecast.forecastday[2].day.condition.text}</p>
-              </h1>
-        `;
+        let daysInfo = data.forecast.forecastday;
 
-        thaDayAfter.innerHTML = thirdDay;
+        for (let i = 0; i < daysInfo.length; i++) {
+          const day = `
+            <p class="m-0">${data.location.name}</p>
+            <h1 class="m-0">
+              <span class="degree">${daysInfo[i].day.avgtemp_c}°C</span>
+              <span><img src="${daysInfo[i].day.condition.icon}" alt=""></span>
+              <p class="m-0 fs-5">${daysInfo[i].day.condition.text}</p>
+            </h1>
+          `;
+          weatherInfo[i].innerHTML = day;
+        }
         
       }
     } catch (error) {
